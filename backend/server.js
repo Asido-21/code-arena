@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const connectDB = require('./config/db');
 
 dotenv.config({ path: './backend/.env' });
@@ -8,6 +9,7 @@ connectDB();
 
 const app = express();
 
+app.use(cors({ origin: ['http://localhost:3000', 'http://127.0.0.1:3000'] }));
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/auth'));
