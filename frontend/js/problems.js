@@ -41,7 +41,7 @@ function renderProblems(problems) {
   tbody.innerHTML = problems
     .map(
       (p, i) => `
-    <tr>
+    <tr onclick="window.location.href='problem.html?slug=${p.slug}'" style="cursor:pointer">
       <td class="num">${i + 1}</td>
       <td class="title-cell">${p.title}</td>
       <td><span class="badge badge-${p.difficulty}">${p.difficulty}</span></td>
