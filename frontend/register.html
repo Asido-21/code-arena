@@ -6,7 +6,7 @@
     <title>Register — Code Arena</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=DM+Sans:wght@400;500;700&family=Syne:wght@700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/register.css" />
@@ -16,38 +16,82 @@
     <div class="container">
       <div class="brand">
         <span class="brand-icon">&lt;/&gt;</span>
-        <span class="brand-name">Code Arena</span>
+        <span class="brand-code">Code <span class="brand-arena">Arena</span></span>
       </div>
       <div class="card">
         <h1>Create Account</h1>
         <p class="subtitle">Join the arena. Start competing.</p>
         <div id="error-msg" class="error-msg hidden"></div>
         <div id="success-msg" class="success-msg hidden"></div>
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            placeholder="e.g. codemaster99"
-            autocomplete="off"
-          />
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" placeholder="you@example.com" />
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            placeholder="min. 6 characters"
-          />
-        </div>
-        <button id="register-btn" onclick="register()">
-          <span id="btn-text">Create Account</span>
-          <span id="btn-loader" class="hidden">...</span>
-        </button>
+
+        <form id="register-form" onsubmit="register(event)">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              placeholder="e.g. codemaster99"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="you@example.com" />
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="password-wrap">
+              <input
+                type="password"
+                id="password"
+                placeholder="min. 6 characters"
+              />
+              <button
+                type="button"
+                class="eye-btn"
+                onmousedown="showPassword()"
+                onmouseup="hidePassword()"
+                onmouseleave="hidePassword()"
+                ontouchstart="showPassword()"
+                ontouchend="hidePassword()"
+              >
+                <svg
+                  id="eye-open"
+                  class="eye-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                <svg
+                  id="eye-closed"
+                  class="eye-icon hidden"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
+                  />
+                  <line x1="1" y1="1" x2="23" y2="23" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <button type="submit" id="register-btn">
+            <span id="btn-text">Create Account</span>
+            <span id="btn-loader" class="hidden">...</span>
+          </button>
+        </form>
+
         <p class="footer-link">
           Already have an account? <a href="login.html">Sign in</a>
         </p>

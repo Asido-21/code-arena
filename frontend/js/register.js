@@ -1,6 +1,8 @@
 const API = 'http://localhost:8000/api';
 
-async function register() {
+async function register(event) {
+  if (event) event.preventDefault();
+
   const username = document.getElementById('username').value.trim();
   const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value.trim();
@@ -11,18 +13,15 @@ async function register() {
   const btnLoader = document.getElementById('btn-loader');
   const btn = document.getElementById('register-btn');
 
-  // Reset messages
   errorMsg.classList.add('hidden');
   successMsg.classList.add('hidden');
 
-  // Basic validation
   if (!username || !email || !password) {
     errorMsg.textContent = 'All fields are required.';
     errorMsg.classList.remove('hidden');
     return;
   }
 
-  // Loading state
   btn.disabled = true;
   btnText.classList.add('hidden');
   btnLoader.classList.remove('hidden');
@@ -42,7 +41,6 @@ async function register() {
       return;
     }
 
-    // Save token to localStorage
     localStorage.setItem('token', data.token);
     localStorage.setItem(
       'user',
@@ -68,4 +66,16 @@ async function register() {
     btnText.classList.remove('hidden');
     btnLoader.classList.add('hidden');
   }
+}
+
+function showPassword() {
+  document.getElementById('password').type = 'text';
+  document.getElementById('eye-open').classList.add('hidden');
+  document.getElementById('eye-closed').classList.remove('hidden');
+}
+
+function hidePassword() {
+  document.getElementById('password').type = 'password';
+  document.getElementById('eye-closed').classList.add('hidden');
+  document.getElementById('eye-open').classList.remove('hidden');
 }

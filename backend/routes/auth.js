@@ -6,11 +6,7 @@ const { protect } = require('../middleware/auth');
 const router = express.Router();
 
 const generateToken = (userId) => {
-  return jwt.sign(
-    { id: userId },
-    process.env.JWT_SECRET,
-    { expiresIn: '7d' }
-  );
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
 };
 
 // POST /api/auth/register
@@ -20,7 +16,9 @@ router.post('/register', async (req, res) => {
   try {
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
-      return res.status(400).json({ message: 'Username or email already taken' });
+      return res
+        .status(400)
+        .json({ message: 'Username or email already taken' });
     }
 
     const user = await User.create({ username, email, password });
@@ -39,10 +37,19 @@ router.post('/register', async (req, res) => {
 
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { identifier, password } = req.body;
+
+  if (!identifier || !password) {
+    return res
+      .status(400)
+      .json({ message: 'Username/email and password are required.' });
+  }
 
   try {
-    const user = await User.findOne({ email });
+    // Find user by either username or email
+    const user = await User.findOne({
+      $or: [{ email: identifier.toLowerCase() }, { username: identifier }],
+    });
 
     if (user && (await user.matchPassword(password))) {
       res.json({
@@ -53,7 +60,7 @@ router.post('/login', async (req, res) => {
         token: generateToken(user._id),
       });
     } else {
-      res.status(401).json({ message: 'Invalid email or password' });
+      res.status(401).json({ message: 'Invalid credentials' });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });

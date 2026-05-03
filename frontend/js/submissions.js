@@ -87,7 +87,7 @@ function filterStatus(status, btn) {
   renderSubmissions(allSubmissions.filter((s) => s.status === status));
 }
 
-function openModal(submissionId) {
+async function openModal(submissionId) {
   const submission = allSubmissions.find((s) => s._id === submissionId);
   if (!submission) return;
 
@@ -111,8 +111,47 @@ function openModal(submissionId) {
   }
 
   document.getElementById('modal-code').textContent = submission.code;
-
   document.getElementById('modal').classList.remove('hidden');
+
+  // Load attempt history for this problem
+  loadAttemptHistory(submission.problem._id, submission._id);
+}
+
+async function loadAttemptHistory(problemId, currentSubmissionId) {
+  const historyEl = document.getElementById('attempt-history');
+  historyEl.innerHTML =
+    '<p class="muted" style="font-size:12px">Loading attempts...</p>';
+
+  try {
+    const res = await fetch(`${API}/submissions/problem/${problemId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const attempts = await res.json();
+
+    const currentIndex = attempts.findIndex(
+      (a) => a._id === currentSubmissionId
+    );
+    const attemptNumber = attempts.length - currentIndex;
+    const acceptedCount = attempts.filter(
+      (a) => a.status === 'Accepted'
+    ).length;
+
+    historyEl.innerHTML = `
+      <div class="attempt-stats">
+        <div class="stat-item">
+          <span class="stat-value">${attemptNumber}</span>
+          <span class="stat-label">of ${attempts.length} attempts</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">${acceptedCount}</span>
+          <span class="stat-label">accepted</span>
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    historyEl.innerHTML =
+      '<p class="muted" style="font-size:12px">Could not load attempts.</p>';
+  }
 }
 
 function closeModal() {

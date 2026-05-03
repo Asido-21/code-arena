@@ -7,8 +7,10 @@ if (localStorage.getItem('token')) {
     existingUser?.role === 'admin' ? 'admin.html' : 'problems.html';
 }
 
-async function login() {
-  const email = document.getElementById('email').value.trim();
+async function login(event) {
+  if (event) event.preventDefault();
+
+  const identifier = document.getElementById('identifier').value.trim();
   const password = document.getElementById('password').value.trim();
 
   const errorMsg = document.getElementById('error-msg');
@@ -18,7 +20,7 @@ async function login() {
 
   errorMsg.classList.add('hidden');
 
-  if (!email || !password) {
+  if (!identifier || !password) {
     errorMsg.textContent = 'All fields are required.';
     errorMsg.classList.remove('hidden');
     return;
@@ -32,7 +34,7 @@ async function login() {
     const res = await fetch(`${API}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ identifier, password }),
     });
 
     const data = await res.json();
@@ -64,4 +66,17 @@ async function login() {
     btnText.classList.remove('hidden');
     btnLoader.classList.add('hidden');
   }
+}
+
+// Show password while button is held down
+function showPassword() {
+  document.getElementById('password').type = 'text';
+  document.getElementById('eye-open').classList.add('hidden');
+  document.getElementById('eye-closed').classList.remove('hidden');
+}
+
+function hidePassword() {
+  document.getElementById('password').type = 'password';
+  document.getElementById('eye-closed').classList.add('hidden');
+  document.getElementById('eye-open').classList.remove('hidden');
 }

@@ -11,6 +11,7 @@
   --card: #111118;
   --border: #1e1e2e;
   --accent: #00ff88;
+  --blue: #4f7ef8;
   --text: #e8e8f0;
   --muted: #555570;
   --pending: #ffaa00;
@@ -23,7 +24,7 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'DM Sans', sans-serif;
   min-height: 100vh;
 }
 
@@ -52,20 +53,28 @@ body {
 
 .brand {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: baseline;
+  gap: 8px;
 }
 
 .brand-icon {
+  font-family: 'JetBrains Mono', monospace;
   font-size: 18px;
   color: var(--accent);
   font-weight: 700;
+  line-height: 1;
 }
-.brand-name {
-  font-family: 'Syne', sans-serif;
+
+.brand-code {
+  font-family: 'DM Sans', sans-serif;
   font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.brand-arena {
+  color: var(--blue);
 }
 
 .nav-links {
@@ -103,7 +112,7 @@ body {
   color: var(--muted);
   padding: 7px 16px;
   border-radius: 6px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'DM Sans', sans-serif;
   font-size: 12px;
   cursor: pointer;
   transition: all 0.2s;
@@ -163,7 +172,7 @@ h1 {
   color: var(--muted);
   padding: 7px 18px;
   border-radius: 20px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'DM Sans', sans-serif;
   font-size: 12px;
   cursor: pointer;
   transition: all 0.2s;
@@ -243,6 +252,7 @@ tbody tr:hover {
   border-radius: 4px;
   background: var(--border);
   color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
@@ -252,6 +262,7 @@ tbody tr:hover {
   display: inline-block;
   padding: 4px 12px;
   border-radius: 20px;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   font-weight: 700;
 }
@@ -327,7 +338,7 @@ tbody tr:hover {
 }
 
 .modal-header h3 {
-  font-family: 'Syne', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 18px;
   margin-bottom: 4px;
 }
@@ -387,7 +398,7 @@ tbody tr:hover {
 }
 
 .modal-body h4 {
-  font-family: 'Syne', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 13px;
   color: var(--muted);
   text-transform: uppercase;
@@ -408,4 +419,44 @@ tbody tr:hover {
   max-height: 350px;
   overflow-y: auto;
   line-height: 1.6;
+}
+/* ATTEMPT HISTORY */
+.attempt-history {
+  margin-bottom: 20px;
+}
+
+.attempt-stats {
+  display: flex;
+  gap: 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.stat-item:not(:last-child) {
+  border-right: 1px solid var(--border);
+}
+
+.stat-value {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }

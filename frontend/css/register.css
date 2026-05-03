@@ -12,6 +12,7 @@
   --border: #1e1e2e;
   --accent: #00ff88;
   --accent-dim: #00ff8822;
+  --blue: #4f7ef8;
   --text: #e8e8f0;
   --muted: #555570;
   --error: #ff4466;
@@ -21,7 +22,7 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'DM Sans', sans-serif;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -44,7 +45,7 @@ body {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 420px;
+  max-width: 460px;
   padding: 24px;
   animation: fadeUp 0.5s ease both;
 }
@@ -62,24 +63,30 @@ body {
 
 .brand {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
   margin-bottom: 28px;
 }
 
 .brand-icon {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 20px;
+  font-size: 22px;
   color: var(--accent);
   font-weight: 700;
+  line-height: 1;
 }
 
-.brand-name {
-  font-family: 'Syne', sans-serif;
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--text);
-  letter-spacing: -0.5px;
+.brand-code {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.brand-arena {
+  color: var(--blue);
 }
 
 .card {
@@ -91,10 +98,11 @@ body {
 
 h1 {
   font-family: 'Syne', sans-serif;
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 800;
   color: var(--text);
   margin-bottom: 6px;
+  white-space: nowrap;
 }
 
 .subtitle {
@@ -146,7 +154,7 @@ button {
   color: #000;
   border: none;
   border-radius: 6px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
@@ -177,7 +185,6 @@ button:disabled {
   color: var(--accent);
   text-decoration: none;
 }
-
 .footer-link a:hover {
   text-decoration: underline;
 }
@@ -200,6 +207,52 @@ button:disabled {
   border-radius: 6px;
   font-size: 13px;
   margin-bottom: 18px;
+}
+
+/* PASSWORD EYE BUTTON */
+.password-wrap {
+  position: relative;
+}
+
+.password-wrap input {
+  padding-right: 44px;
+}
+
+.eye-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.eye-btn:hover {
+  color: var(--accent);
+}
+.eye-btn:active {
+  transform: translateY(-50%) !important;
+}
+
+.eye-icon {
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+
+.eye-icon.hidden {
+  display: none;
 }
 
 .hidden {

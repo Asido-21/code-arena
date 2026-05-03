@@ -23,6 +23,20 @@ router.post('/', protect, async (req, res) => {
       status: 'Pending',
     });
 
+    // Increment totalSubmissions on the problem
+    const Problem = require('../models/Problem');
+    const problem = await Problem.findById(problemId);
+    if (problem) {
+      problem.totalSubmissions += 1;
+      // Recalculate acceptance rate
+      if (problem.totalSubmissions > 0) {
+        problem.acceptanceRate = Math.round(
+          (problem.totalAccepted / problem.totalSubmissions) * 100
+        );
+      }
+      await problem.save();
+    }
+
     res.status(201).json(submission);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -82,6 +96,15 @@ router.patch('/:id/verdict', protect, async (req, res) => {
   }
 
   try {
+    // Get the existing submission first
+    const existingSubmission = await Submission.findById(req.params.id);
+    if (!existingSubmission) {
+      return res.status(404).json({ message: 'Submission not found.' });
+    }
+
+    const previousStatus = existingSubmission.status;
+
+    // Update the submission
     const submission = await Submission.findByIdAndUpdate(
       req.params.id,
       { status, adminNote },
@@ -90,8 +113,60 @@ router.patch('/:id/verdict', protect, async (req, res) => {
       .populate('problem', 'title')
       .populate('user', 'username');
 
-    if (!submission) {
-      return res.status(404).json({ message: 'Submission not found.' });
+    // === STATS + RATING LOGIC ===
+    const Problem = require('../models/Problem');
+    const User = require('../models/User');
+
+    const problem = await Problem.findById(existingSubmission.problem);
+    const user = await User.findById(existingSubmission.user);
+
+    if (problem && user) {
+      const wasAccepted = previousStatus === 'Accepted';
+      const isNowAccepted = status === 'Accepted';
+
+      // Adjust totalAccepted based on transition
+      if (!wasAccepted && isNowAccepted) {
+        problem.totalAccepted += 1;
+      } else if (wasAccepted && !isNowAccepted) {
+        problem.totalAccepted = Math.max(0, problem.totalAccepted - 1);
+      }
+
+      // Recalculate acceptance rate
+      if (problem.totalSubmissions > 0) {
+        problem.acceptanceRate = Math.round(
+          (problem.totalAccepted / problem.totalSubmissions) * 100
+        );
+      }
+
+      await problem.save();
+
+      // === RATING UPDATES (only on first transition to Accepted) ===
+      if (!wasAccepted && isNowAccepted) {
+        const ratingPoints = {
+          Easy: 30,
+          Medium: 50,
+          Hard: 80,
+        };
+        const points = ratingPoints[problem.difficulty] || 30;
+
+        user.learningRating += points;
+        user.hardcoreRating += points;
+
+        await user.save();
+      } else if (wasAccepted && !isNowAccepted) {
+        // Revert rating if admin changes Accepted to something else
+        const ratingPoints = {
+          Easy: 30,
+          Medium: 50,
+          Hard: 80,
+        };
+        const points = ratingPoints[problem.difficulty] || 30;
+
+        user.learningRating = Math.max(1200, user.learningRating - points);
+        user.hardcoreRating = Math.max(1200, user.hardcoreRating - points);
+
+        await user.save();
+      }
     }
 
     res.json(submission);

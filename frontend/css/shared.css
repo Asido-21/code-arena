@@ -12,6 +12,7 @@
   --border: #1e1e2e;
   --accent: #00ff88;
   --accent-dim: #00ff8822;
+  --blue: #4f7ef8;
   --text: #e8e8f0;
   --muted: #555570;
   --easy: #00ff88;
@@ -22,7 +23,7 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'DM Sans', sans-serif;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -43,21 +44,29 @@ body {
 
 .brand {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
   text-decoration: none;
 }
 
 .brand-icon {
+  font-family: 'JetBrains Mono', monospace;
   color: var(--accent);
   font-weight: 700;
   font-size: 16px;
+  line-height: 1;
 }
 
-.brand-name {
-  font-family: 'Syne', sans-serif;
+.brand-code {
+  font-family: 'DM Sans', sans-serif;
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.brand-arena {
+  color: var(--blue);
 }
 
 .nav-center {
@@ -204,7 +213,7 @@ select {
 }
 
 .section h3 {
-  font-family: 'Syne', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   font-weight: 700;
   margin-bottom: 12px;
