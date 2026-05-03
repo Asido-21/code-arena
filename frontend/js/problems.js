@@ -8,7 +8,11 @@ if (!token) {
   window.location.href = 'login.html';
 }
 
-// Show welcome message
+// Block admins from this page
+if (user?.role === 'admin') {
+  window.location.href = 'admin.html';
+}
+
 if (user) {
   document.getElementById('welcome-msg').textContent = `hey, ${user.username}`;
 }

@@ -1,8 +1,10 @@
 const API = 'http://localhost:8000/api';
 
-// If already logged in, redirect to problems
+// If already logged in, redirect based on role
 if (localStorage.getItem('token')) {
-  window.location.href = 'problems.html';
+  const existingUser = JSON.parse(localStorage.getItem('user') || 'null');
+  window.location.href =
+    existingUser?.role === 'admin' ? 'admin.html' : 'problems.html';
 }
 
 async function login() {
@@ -52,7 +54,8 @@ async function login() {
       })
     );
 
-    window.location.href = 'problems.html';
+    window.location.href =
+      data.role === 'admin' ? 'admin.html' : 'problems.html';
   } catch (err) {
     errorMsg.textContent = 'Could not connect to server.';
     errorMsg.classList.remove('hidden');

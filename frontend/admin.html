@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel — Code Arena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/admin.css" />
+  </head>
+  <body>
+    <div class="bg-grid"></div>
+
+    <nav class="navbar">
+      <div class="brand">
+        <span class="brand-icon">&lt;/&gt;</span>
+        <span class="brand-name">Code Arena</span>
+        <span class="admin-tag">ADMIN</span>
+      </div>
+      <div class="nav-links">
+        <a href="admin.html" class="active">Admin</a>
+      </div>
+      <div class="nav-right">
+        <span id="welcome-msg" class="welcome"></span>
+        <button onclick="logout()" class="logout-btn">Logout</button>
+      </div>
+    </nav>
+
+    <main class="container">
+      <div class="page-header">
+        <h1>Admin Panel</h1>
+        <p class="subtitle">Review and judge submissions.</p>
+      </div>
+
+      <div class="filters">
+        <button
+          class="filter-btn active"
+          onclick="filterStatus('Pending', this)"
+        >
+          Pending
+        </button>
+        <button class="filter-btn" onclick="filterStatus('all', this)">
+          All
+        </button>
+        <button class="filter-btn" onclick="filterStatus('Accepted', this)">
+          Accepted
+        </button>
+        <button class="filter-btn" onclick="filterStatus('Wrong Answer', this)">
+          Wrong Answer
+        </button>
+      </div>
+
+      <div id="submissions-list">
+        <div class="loading">Loading submissions...</div>
+      </div>
+    </main>
+
+    <!-- Modal for viewing code + setting verdict -->
+    <div id="modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <h3 id="modal-problem-title">Problem Title</h3>
+            <p class="muted" id="modal-user-info">user · language · time</p>
+          </div>
+          <button class="close-btn" onclick="closeModal()">×</button>
+        </div>
+
+        <div class="modal-body">
+          <h4>Submitted Code</h4>
+          <pre id="modal-code"></pre>
+
+          <h4 style="margin-top: 20px">Set Verdict</h4>
+          <select id="verdict-select" class="verdict-select">
+            <option value="Accepted">Accepted</option>
+            <option value="Wrong Answer">Wrong Answer</option>
+            <option value="Time Limit Exceeded">Time Limit Exceeded</option>
+            <option value="Memory Limit Exceeded">Memory Limit Exceeded</option>
+            <option value="Runtime Error">Runtime Error</option>
+            <option value="Compilation Error">Compilation Error</option>
+          </select>
+
+          <textarea
+            id="admin-note"
+            class="admin-note"
+            placeholder="Optional feedback for the user..."
+          ></textarea>
+
+          <button class="submit-verdict-btn" onclick="submitVerdict()">
+            Submit Verdict
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+  </body>
+</html>

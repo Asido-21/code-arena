@@ -1,7 +1,14 @@
 const API = 'http://localhost:8000/api';
 
 const token = localStorage.getItem('token');
+const user = JSON.parse(localStorage.getItem('user') || 'null');
+
 if (!token) window.location.href = 'login.html';
+
+// Block admins from this page
+if (user?.role === 'admin') {
+  window.location.href = 'admin.html';
+}
 
 // Get slug from URL: problem.html?slug=two-sum
 const slug = new URLSearchParams(window.location.search).get('slug');

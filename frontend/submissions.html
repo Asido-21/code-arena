@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Submissions — Code Arena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/submissions.css" />
+  </head>
+  <body>
+    <div class="bg-grid"></div>
+
+    <nav class="navbar">
+      <div class="brand">
+        <span class="brand-icon">&lt;/&gt;</span>
+        <span class="brand-name">Code Arena</span>
+      </div>
+      <div class="nav-links">
+        <a href="problems.html">Problems</a>
+        <a href="submissions.html" class="active">Submissions</a>
+      </div>
+      <div class="nav-right">
+        <span id="welcome-msg" class="welcome"></span>
+        <button onclick="logout()" class="logout-btn">Logout</button>
+      </div>
+    </nav>
+
+    <main class="container">
+      <div class="page-header">
+        <h1>My Submissions</h1>
+        <p class="subtitle">Your submission history and verdicts.</p>
+      </div>
+
+      <div class="filters">
+        <button class="filter-btn active" onclick="filterStatus('all', this)">
+          All
+        </button>
+        <button class="filter-btn" onclick="filterStatus('Pending', this)">
+          Pending
+        </button>
+        <button class="filter-btn" onclick="filterStatus('Accepted', this)">
+          Accepted
+        </button>
+        <button class="filter-btn" onclick="filterStatus('Wrong Answer', this)">
+          Wrong Answer
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Problem</th>
+              <th>Language</th>
+              <th>Status</th>
+              <th>Submitted</th>
+            </tr>
+          </thead>
+          <tbody id="submissions-body">
+            <tr>
+              <td colspan="5" class="loading">Loading submissions...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <!-- Modal for viewing submission details -->
+    <div id="modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <h3 id="modal-problem-title">Problem Title</h3>
+            <p class="muted" id="modal-meta">language · time</p>
+          </div>
+          <button class="close-btn" onclick="closeModal()">×</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="modal-verdict-row">
+            <span class="modal-label">Verdict:</span>
+            <span id="modal-verdict" class="status-badge"></span>
+          </div>
+
+          <div id="feedback-section" class="feedback-section hidden">
+            <h4>Admin Feedback</h4>
+            <div id="modal-feedback" class="feedback-box"></div>
+          </div>
+
+          <h4 style="margin-top: 20px">Submitted Code</h4>
+          <pre id="modal-code"></pre>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/submissions.js"></script>
+  </body>
+</html>
