@@ -1,36 +1,45 @@
 const API = 'http://localhost:8000/api';
 
-// Check if user is logged in
 const token = localStorage.getItem('token');
 const user = JSON.parse(localStorage.getItem('user') || 'null');
 
-if (!token) {
-  window.location.href = 'login.html';
-}
-
-// Block admins from this page
-if (user?.role === 'admin') {
-  window.location.href = 'admin.html';
-}
-
-if (user) {
+if (!token) window.location.href = 'login.html';
+if (user?.role === 'admin') window.location.href = 'admin.html';
+if (user)
   document.getElementById('welcome-msg').textContent = `hey, ${user.username}`;
-}
 
 let allProblems = [];
+let statusMap = {}; // ADD — stores solved/attempted per problem id
 
 async function loadProblems() {
   try {
-    const res = await fetch(`${API}/problems`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await res.json();
-    allProblems = data;
-    renderProblems(data);
+    // Fetch problems AND status in parallel
+    const [problemsRes, statusRes] = await Promise.all([
+      fetch(`${API}/problems`, {
+        headers: { Authorization: `Bearer ${token}` },
+      }),
+      fetch(`${API}/problems/status`, {
+        headers: { Authorization: `Bearer ${token}` },
+      }),
+    ]);
+
+    allProblems = await problemsRes.json();
+    statusMap = await statusRes.json();
+
+    renderProblems(allProblems);
   } catch (err) {
     document.getElementById('problems-body').innerHTML =
-      '<tr><td colspan="5" class="loading">Failed to load problems.</td></tr>';
+      '<tr><td colspan="6" class="loading">Failed to load problems.</td></tr>';
   }
+}
+
+function getStatusBadge(problemId) {
+  const s = statusMap[problemId];
+  if (s === 'solved')
+    return '<span class="status-badge status-solved">Solved</span>';
+  if (s === 'attempted')
+    return '<span class="status-badge status-attempted">Attempted</span>';
+  return '<span class="status-badge status-unsolved">Unsolved</span>';
 }
 
 function renderProblems(problems) {
@@ -38,7 +47,7 @@ function renderProblems(problems) {
 
   if (problems.length === 0) {
     tbody.innerHTML =
-      '<tr><td colspan="5" class="loading">No problems found.</td></tr>';
+      '<tr><td colspan="6" class="loading">No problems found.</td></tr>';
     return;
   }
 
@@ -51,26 +60,23 @@ function renderProblems(problems) {
       <td><span class="badge badge-${p.difficulty}">${p.difficulty}</span></td>
       <td class="tags">${p.tags.slice(0, 2).join(', ')}</td>
       <td class="acceptance">${p.acceptanceRate}%</td>
+      <td>${getStatusBadge(p._id)}</td>
     </tr>
   `
     )
     .join('');
 }
 
-async function filterProblems(difficulty, btn) {
-  // Update active button
+function filterProblems(difficulty, btn) {
   document
     .querySelectorAll('.filter-btn')
     .forEach((b) => b.classList.remove('active'));
   btn.classList.add('active');
-
-  if (difficulty === 'all') {
-    renderProblems(allProblems);
-    return;
-  }
-
-  const filtered = allProblems.filter((p) => p.difficulty === difficulty);
-  renderProblems(filtered);
+  renderProblems(
+    difficulty === 'all'
+      ? allProblems
+      : allProblems.filter((p) => p.difficulty === difficulty)
+  );
 }
 
 function logout() {
@@ -79,5 +85,4 @@ function logout() {
   window.location.href = 'login.html';
 }
 
-// Load problems on page load
 loadProblems();

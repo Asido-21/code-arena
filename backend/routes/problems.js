@@ -1,6 +1,7 @@
 const express = require('express');
 const Problem = require('../models/Problem');
 const { protect } = require('../middleware/auth');
+const Submission = require('../models/Submission');
 
 const router = express.Router();
 
@@ -18,6 +19,29 @@ router.get('/', async (req, res) => {
     );
 
     res.json(problems);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// GET /api/problems/status — returns solved/attempted map for logged-in user
+router.get('/status', protect, async (req, res) => {
+  try {
+    const submissions = await Submission.find({ user: req.user._id }).select(
+      'problem status'
+    );
+
+    const statusMap = {};
+    submissions.forEach((sub) => {
+      const id = sub.problem.toString();
+      if (sub.status === 'Accepted') {
+        statusMap[id] = 'solved';
+      } else if (!statusMap[id]) {
+        statusMap[id] = 'attempted';
+      }
+    });
+
+    res.json(statusMap);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
