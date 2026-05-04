@@ -19,7 +19,9 @@
         style="text-decoration: none; color: inherit"
       >
         <span class="brand-icon">&lt;/&gt;</span>
-        <span class="brand-code">Code <span class="brand-arena">Arena</span></span>
+        <span class="brand-code"
+          >Code <span class="brand-arena">Arena</span></span
+        >
       </a>
       <div class="nav-center" id="problem-title">Loading...</div>
       <div class="nav-right">
@@ -29,33 +31,28 @@
           <option value="java">Java</option>
           <option value="cpp">C++</option>
         </select>
+        <a href="profile.html" class="avatar-btn" id="avatar-btn"></a>
         <button id="submit-btn" onclick="submitCode()">Submit</button>
       </div>
     </div>
-
     <div class="workspace">
-      <!-- Left panel: problem description -->
       <div class="panel left-panel">
         <div class="tabs">
           <button class="tab active">Description</button>
           <button class="tab" onclick="showHints()">Hints</button>
         </div>
-
         <div id="description-panel" class="panel-content">
           <div id="difficulty-badge"></div>
           <p id="problem-description" class="description-text">Loading...</p>
-
           <div class="section">
             <h3>Examples</h3>
             <div id="examples"></div>
           </div>
-
           <div class="section">
             <h3>Constraints</h3>
             <ul id="constraints"></ul>
           </div>
         </div>
-
         <div id="hints-panel" class="panel-content hidden">
           <div class="hint-warning">
             ⚠ Using hints affects your Learning Rating only — Hardcore Rating
@@ -64,15 +61,11 @@
           <div id="hint-list"></div>
         </div>
       </div>
-
-      <!-- Right panel: code editor -->
       <div class="panel right-panel">
         <div id="editor"></div>
         <div id="verdict-bar" class="verdict-bar hidden"></div>
       </div>
     </div>
-
-    <!-- Monaco Editor -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
     <script src="js/problem.js"></script>
   </body>

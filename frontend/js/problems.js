@@ -5,15 +5,17 @@ const user = JSON.parse(localStorage.getItem('user') || 'null');
 
 if (!token) window.location.href = 'login.html';
 if (user?.role === 'admin') window.location.href = 'admin.html';
-if (user)
-  document.getElementById('welcome-msg').textContent = `hey, ${user.username}`;
+if (user) {
+  document.getElementById('avatar-btn').textContent = user.username
+    .slice(0, 2)
+    .toUpperCase();
+}
 
 let allProblems = [];
-let statusMap = {}; // ADD — stores solved/attempted per problem id
+let statusMap = {};
 
 async function loadProblems() {
   try {
-    // Fetch problems AND status in parallel
     const [problemsRes, statusRes] = await Promise.all([
       fetch(`${API}/problems`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -22,10 +24,8 @@ async function loadProblems() {
         headers: { Authorization: `Bearer ${token}` },
       }),
     ]);
-
     allProblems = await problemsRes.json();
     statusMap = await statusRes.json();
-
     renderProblems(allProblems);
   } catch (err) {
     document.getElementById('problems-body').innerHTML =
@@ -44,13 +44,11 @@ function getStatusBadge(problemId) {
 
 function renderProblems(problems) {
   const tbody = document.getElementById('problems-body');
-
   if (problems.length === 0) {
     tbody.innerHTML =
       '<tr><td colspan="6" class="loading">No problems found.</td></tr>';
     return;
   }
-
   tbody.innerHTML = problems
     .map(
       (p, i) => `

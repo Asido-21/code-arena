@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile — Code Arena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=DM+Sans:wght@400;500;700&family=Syne:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/profile.css" />
+  </head>
+  <body>
+    <div class="bg-grid"></div>
+
+    <nav class="navbar">
+      <div class="brand">
+        <span class="brand-icon">&lt;/&gt;</span>
+        <span class="brand-code"
+          >Code <span class="brand-arena">Arena</span></span
+        >
+      </div>
+      <div class="nav-links">
+        <a href="problems.html">Problems</a>
+        <a href="submissions.html">Submissions</a>
+      </div>
+      <div class="nav-right">
+        <span id="welcome-msg" class="welcome"></span>
+        <button onclick="logout()" class="logout-btn">Logout</button>
+      </div>
+    </nav>
+
+    <main class="container">
+      <!-- TOP: avatar + name + ratings -->
+      <div class="profile-header">
+        <div class="avatar" id="avatar-initials"></div>
+        <div class="profile-meta">
+          <h1 id="profile-username">Loading...</h1>
+          <span class="member-since" id="member-since"></span>
+        </div>
+        <div class="ratings">
+          <div class="rating-card">
+            <span class="rating-label">Hardcore Rating</span>
+            <span class="rating-value hardcore" id="hardcore-rating">—</span>
+          </div>
+          <div class="rating-card">
+            <span class="rating-label">Learning Rating</span>
+            <span class="rating-value learning" id="learning-rating">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MIDDLE: solved stats + roadmap progress -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-label">Total Solved</span>
+          <span class="stat-value" id="total-solved">—</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Easy</span>
+          <span class="stat-value easy" id="easy-solved">—</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Medium</span>
+          <span class="stat-value medium" id="medium-solved">—</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Hard</span>
+          <span class="stat-value hard" id="hard-solved">—</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Roadmap Day</span>
+          <span class="stat-value" id="roadmap-day">—</span>
+        </div>
+      </div>
+
+      <!-- BOTTOM: recent submissions -->
+      <div class="section-card">
+        <h2 class="section-title">Recent Submissions</h2>
+        <div id="recent-list">
+          <p class="empty-msg">Loading...</p>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/profile.js"></script>
+  </body>
+</html>

@@ -460,3 +460,24 @@ tbody tr:hover {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+
+.avatar-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+.avatar-btn:hover {
+  opacity: 0.8;
+}

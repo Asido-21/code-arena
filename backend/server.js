@@ -15,6 +15,7 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/problems', require('./routes/problems'));
 app.use('/api/submissions', require('./routes/submissions'));
+app.use('/api/users', require('./routes/users'));
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Code Arena API running' });

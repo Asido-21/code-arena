@@ -4,20 +4,21 @@ const token = localStorage.getItem('token');
 const user = JSON.parse(localStorage.getItem('user') || 'null');
 
 if (!token) window.location.href = 'login.html';
+if (user?.role === 'admin') window.location.href = 'admin.html';
 
-// Block admins from this page
-if (user?.role === 'admin') {
-  window.location.href = 'admin.html';
+// Avatar initials
+if (user) {
+  document.getElementById('avatar-btn').textContent = user.username
+    .slice(0, 2)
+    .toUpperCase();
 }
 
-// Get slug from URL: problem.html?slug=two-sum
 const slug = new URLSearchParams(window.location.search).get('slug');
 if (!slug) window.location.href = 'problems.html';
 
 let editor;
 let currentProblem;
 
-// Default starter code per language
 const starterCode = {
   javascript: '// Write your solution here\nfunction solution() {\n\n}\n',
   python: '# Write your solution here\ndef solution():\n    pass\n',
@@ -25,7 +26,6 @@ const starterCode = {
   cpp: '// Write your solution here\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n\n    return 0;\n}\n',
 };
 
-// Load Monaco editor
 require.config({
   paths: {
     vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs',
@@ -44,18 +44,17 @@ require(['vs/editor/editor.main'], function () {
     automaticLayout: true,
     padding: { top: 16 },
   });
-
-  // Load problem after editor is ready
   loadProblem();
 });
 
-// Switch language
 document
   .getElementById('language-select')
   .addEventListener('change', function () {
     const lang = this.value;
-    const monacoLang = lang === 'cpp' ? 'cpp' : lang;
-    monaco.editor.setModelLanguage(editor.getModel(), monacoLang);
+    monaco.editor.setModelLanguage(
+      editor.getModel(),
+      lang === 'cpp' ? 'cpp' : lang
+    );
     editor.setValue(starterCode[lang]);
   });
 
@@ -67,22 +66,17 @@ async function loadProblem() {
     const problem = await res.json();
     currentProblem = problem;
 
-    // Set page title
     document.title = `${problem.title} — Code Arena`;
     document.getElementById('problem-title').textContent = problem.title;
 
-    // Difficulty badge
     const badge = document.getElementById('difficulty-badge');
     badge.textContent = problem.difficulty;
     badge.className = `badge-${problem.difficulty}`;
 
-    // Description
     document.getElementById('problem-description').textContent =
       problem.description;
 
-    // Examples
-    const examplesEl = document.getElementById('examples');
-    examplesEl.innerHTML = problem.examples
+    document.getElementById('examples').innerHTML = problem.examples
       .map(
         (ex, i) => `
       <div class="example-block">
@@ -96,13 +90,10 @@ async function loadProblem() {
       )
       .join('');
 
-    // Constraints
-    const constraintsEl = document.getElementById('constraints');
-    constraintsEl.innerHTML = problem.constraints
+    document.getElementById('constraints').innerHTML = problem.constraints
       .map((c) => `<li>${c}</li>`)
       .join('');
 
-    // Hints
     const hintList = document.getElementById('hint-list');
     const hints = [
       { label: 'Hint 1 — Nudge', key: 'tier1' },
@@ -138,28 +129,26 @@ function toggleHint(index) {
   arrow.textContent = isOpen ? '▼' : '▲';
 }
 
-// Tab switching
 function showHints() {
   document.getElementById('description-panel').classList.add('hidden');
   document.getElementById('hints-panel').classList.remove('hidden');
-  document.querySelectorAll('.tab').forEach((t, i) => {
-    t.classList.toggle('active', i === 1);
-  });
+  document
+    .querySelectorAll('.tab')
+    .forEach((t, i) => t.classList.toggle('active', i === 1));
 }
 
 document.querySelectorAll('.tab')[0].addEventListener('click', function () {
   document.getElementById('hints-panel').classList.add('hidden');
   document.getElementById('description-panel').classList.remove('hidden');
-  document.querySelectorAll('.tab').forEach((t, i) => {
-    t.classList.toggle('active', i === 0);
-  });
+  document
+    .querySelectorAll('.tab')
+    .forEach((t, i) => t.classList.toggle('active', i === 0));
 });
 
 async function submitCode() {
   const code = editor.getValue();
   const language = document.getElementById('language-select').value;
   const btn = document.getElementById('submit-btn');
-  const verdictBar = document.getElementById('verdict-bar');
 
   if (!code.trim()) return;
 
@@ -173,20 +162,13 @@ async function submitCode() {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        problemId: currentProblem._id,
-        code,
-        language,
-      }),
+      body: JSON.stringify({ problemId: currentProblem._id, code, language }),
     });
-
     const data = await res.json();
-
     if (!res.ok) {
       showVerdict('error', `Error: ${data.message}`);
       return;
     }
-
     showVerdict('pending', '⏳ Submitted — awaiting review');
   } catch (err) {
     showVerdict('error', '❌ Could not connect to server.');

@@ -3,17 +3,12 @@ const API = 'http://localhost:8000/api';
 const token = localStorage.getItem('token');
 const user = JSON.parse(localStorage.getItem('user') || 'null');
 
-if (!token) {
-  window.location.href = 'login.html';
-}
-
-// Block admins from this page
-if (user?.role === 'admin') {
-  window.location.href = 'admin.html';
-}
-
+if (!token) window.location.href = 'login.html';
+if (user?.role === 'admin') window.location.href = 'admin.html';
 if (user) {
-  document.getElementById('welcome-msg').textContent = `hey, ${user.username}`;
+  document.getElementById('avatar-btn').textContent = user.username
+    .slice(0, 2)
+    .toUpperCase();
 }
 
 let allSubmissions = [];
@@ -34,21 +29,17 @@ async function loadSubmissions() {
 
 function renderSubmissions(submissions) {
   const tbody = document.getElementById('submissions-body');
-
   if (submissions.length === 0) {
     tbody.innerHTML =
       '<tr><td colspan="5" class="loading">No submissions yet. Solve a problem to get started!</td></tr>';
     return;
   }
-
   tbody.innerHTML = submissions
     .map(
       (s, i) => `
     <tr onclick="openModal('${s._id}')" style="cursor:pointer">
       <td class="num">${i + 1}</td>
-      <td>
-        <span class="problem-link">${s.problem.title}</span>
-      </td>
+      <td><span class="problem-link">${s.problem.title}</span></td>
       <td><span class="lang-tag">${s.language}</span></td>
       <td><span class="status-badge status-${s.status.replace(/ /g, '-')}">${s.status}</span></td>
       <td class="timestamp">${formatDate(s.createdAt)}</td>
@@ -65,7 +56,6 @@ function formatDate(dateString) {
   const diffMins = Math.floor(diffMs / 60000);
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
-
   if (diffMins < 1) return 'just now';
   if (diffMins < 60) return `${diffMins}m ago`;
   if (diffHours < 24) return `${diffHours}h ago`;
@@ -78,13 +68,11 @@ function filterStatus(status, btn) {
     .querySelectorAll('.filter-btn')
     .forEach((b) => b.classList.remove('active'));
   btn.classList.add('active');
-
-  if (status === 'all') {
-    renderSubmissions(allSubmissions);
-    return;
-  }
-
-  renderSubmissions(allSubmissions.filter((s) => s.status === status));
+  renderSubmissions(
+    status === 'all'
+      ? allSubmissions
+      : allSubmissions.filter((s) => s.status === status)
+  );
 }
 
 async function openModal(submissionId) {
@@ -100,7 +88,6 @@ async function openModal(submissionId) {
   verdictBadge.textContent = submission.status;
   verdictBadge.className = `status-badge status-${submission.status.replace(/ /g, '-')}`;
 
-  // Show feedback only if it exists
   const feedbackSection = document.getElementById('feedback-section');
   const feedbackBox = document.getElementById('modal-feedback');
   if (submission.adminNote && submission.adminNote.trim()) {
@@ -112,8 +99,6 @@ async function openModal(submissionId) {
 
   document.getElementById('modal-code').textContent = submission.code;
   document.getElementById('modal').classList.remove('hidden');
-
-  // Load attempt history for this problem
   loadAttemptHistory(submission.problem._id, submission._id);
 }
 
@@ -121,13 +106,11 @@ async function loadAttemptHistory(problemId, currentSubmissionId) {
   const historyEl = document.getElementById('attempt-history');
   historyEl.innerHTML =
     '<p class="muted" style="font-size:12px">Loading attempts...</p>';
-
   try {
     const res = await fetch(`${API}/submissions/problem/${problemId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const attempts = await res.json();
-
     const currentIndex = attempts.findIndex(
       (a) => a._id === currentSubmissionId
     );
@@ -135,7 +118,6 @@ async function loadAttemptHistory(problemId, currentSubmissionId) {
     const acceptedCount = attempts.filter(
       (a) => a.status === 'Accepted'
     ).length;
-
     historyEl.innerHTML = `
       <div class="attempt-stats">
         <div class="stat-item">
@@ -158,7 +140,6 @@ function closeModal() {
   document.getElementById('modal').classList.add('hidden');
 }
 
-// Close modal on background click
 document.getElementById('modal').addEventListener('click', function (e) {
   if (e.target === this) closeModal();
 });
